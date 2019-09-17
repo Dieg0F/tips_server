@@ -22,7 +22,7 @@ export class NotificationBuilder {
         return payload;
     }
 
-    static updateService(service: Service, pfLastAction: Profile, pfToNotify: Profile): any {
+    static updateService(service: Service, pfLastAction: Profile): any {
         console.log("NotificationBuilder | Creating notification for a service update.");
 
         var notificationTitle: string = "";
@@ -59,6 +59,24 @@ export class NotificationBuilder {
             notification: {
                 title: notificationTitle,
                 body: notificationBody
+            }
+        };
+
+        console.log("NotificationBuilder | Notification payload: ", payload);
+        return payload;
+    }
+
+    static createAvaliation(avaliationUid: string, pfName: string) {
+        console.log("NotificationBuilder | Creating notification for a new avaliation.")
+
+        const payload = {
+            data: {
+                title: "new_avaliaiton",
+                body: avaliationUid,
+            },
+            notification: {
+                title: "Avaliação recebida",
+                body: "Você recebeu uma avaliação de " + pfName
             }
         };
 

@@ -73,7 +73,7 @@ export function onServiceUpdate() {
                                 const pfToNotify = profileParse(pfToNotifySnap.data());
 
                                 console.log("Service Functions | Send Notification to User: ", pfToNotify.nome);
-                                var payload = NotificationBuilder.updateService(service, pfLastAction, pfToNotify);
+                                var payload = NotificationBuilder.updateService(service, pfLastAction);
 
                                 console.log("Service Functions | Prepared to send a notification to User!");
                                 return NotificationSender.sendNotification(pfToNotify.deviceToken, payload);
