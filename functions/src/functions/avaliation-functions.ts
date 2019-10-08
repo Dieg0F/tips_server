@@ -67,14 +67,14 @@ function avaliationHandler(data: any) {
                                 console.log("Avaliation Functions | New Highest rate!");
                                 pfRated.userMinRate = userMinRate;
 
-                                console.log("Avaliation Functions | Updating ", pfRated.nome, " avaliations count and user rate!");
+                                console.log("Avaliation Functions | Updating ", pfRated.name.firstName, " avaliations count and user rate!");
                                 pfRated.avaliationsCount = userAvaliationsCount;
                                 pfRated.userRate = userTotalRate / userAvaliationsCount;
 
                                 console.log("Avaliation Functions | Updating profile on Database!");
                                 return admin.firestore().doc(Constants.PROFILES_COLLECTION + pfRated.uid).update(pfRated)
                                     .then(() => {
-                                        const payload = NotificationBuilder.createAvaliation(avaliation.uId, pfEvaluator.nome);
+                                        const payload = NotificationBuilder.createAvaliation(avaliation.uId, pfEvaluator.name);
 
                                         console.log("Avaliation Functions | Prepared to send a notification to Rated User!");
                                         return NotificationSender.sendNotification(pfRated.deviceToken, payload);

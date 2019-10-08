@@ -1,20 +1,20 @@
 import { Profile } from '../model/profile';
-import { Service } from '../model/service';
 import { Constants } from './constants';
+import { Solicitation } from '../model/solicitation';
 
 
 export class NotificationBuilder {
 
-    static createService(serviceUid: string, contractorName: string): any {
+    static createSolicitation(solicitationUid: string, contractorName: any): any {
         console.log("NotificationBuilder | Creating notification for a new service.")
         const payload = {
             data: {
                 title: "new_service",
-                body: serviceUid,
+                body: solicitationUid,
             },
             notification: {
                 title: "Solicitação de serviço",
-                body: contractorName + " te enviou uma solicitação de serviço!"
+                body: contractorName.firstName + " " + contractorName.lastName + " te enviou uma solicitação de serviço!"
             }
         };
 
@@ -22,39 +22,32 @@ export class NotificationBuilder {
         return payload;
     }
 
-    static updateService(service: Service, pfLastAction: Profile): any {
+    static updateSolicitation(solicitation: Solicitation, pfLastAction: Profile): any {
         console.log("NotificationBuilder | Creating notification for a service update.");
 
         var notificationTitle: string = "";
         var notificationBody: string = "";
+        var userFullName = pfLastAction.name.firstName + " " + pfLastAction.name.lastName;
 
-        switch (service.status) {
-            case Constants.SERVICE_IS_RUNNING:
+        switch (solicitation.status) {
+            case Constants.SOLICITATION_IS_OPEN:
                 notificationTitle = "Serviço aprovado!";
-                notificationBody = pfLastAction.nome + " aprovou a sua solicitação de serviço!";
+                notificationBody = userFullName + " aprovou a sua solicitação de serviço!";
                 break;
-            case Constants.SERVICE_IS_FINISHED:
+            case Constants.SOLICITATION_IS_FINISHED:
                 notificationTitle = "Serviço finalizado!";
-                notificationBody = pfLastAction.nome + " aceitou o termino do serviço!";
+                notificationBody = userFullName + " finalizou do serviço!";
                 break;
-            case Constants.SERVICE_IS_CANCELED:
+            case Constants.SOLICITATION_IS_CANCELED:
                 notificationTitle = "Serviço cancelado!";
-                notificationBody = pfLastAction.nome + " aceitou o cancelamento do serviço!";
-                break;
-            case Constants.SERVICE_IS_AWAIT_TO_FINISH:
-                notificationTitle = "Finalização de serviço";
-                notificationBody = pfLastAction.nome + " finalizou o serviço! Acesse o serviço e finalize!";
-                break;
-            case Constants.SERVICE_IS_AWAIT_TO_CANCEL:
-                notificationTitle = "Cancelamento de serviço";
-                notificationBody = pfLastAction.nome + " cancelou o serviço! Acesse para saber mais!";
+                notificationBody = userFullName + " cancelou a solicitação de serviço!";
                 break;
         }
 
         const payload = {
             data: {
                 title: "service_update",
-                body: service.uId,
+                body: solicitation.uId,
             },
             notification: {
                 title: notificationTitle,
@@ -66,8 +59,10 @@ export class NotificationBuilder {
         return payload;
     }
 
-    static createAvaliation(avaliationUid: string, pfName: string) {
+    static createAvaliation(avaliationUid: string, pfName: any) {
         console.log("NotificationBuilder | Creating notification for a new avaliation.")
+
+        var userFullName = pfName.name.firstName + " " + pfName.name.lastName;
 
         const payload = {
             data: {
@@ -76,7 +71,7 @@ export class NotificationBuilder {
             },
             notification: {
                 title: "Avaliação recebida",
-                body: "Você recebeu uma avaliação de " + pfName
+                body: "Você recebeu uma avaliação de " + userFullName
             }
         };
 

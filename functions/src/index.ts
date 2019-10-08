@@ -1,13 +1,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { onServiceCreate, onServiceUpdate } from './functions/service-functions';
 import { onAvaliatedUpdated, onAvaliatedCreated } from './functions/avaliation-functions';
+import { onSolicitationUpdate, onSolicitationCreate } from './functions/solicitation-functions';
 
 admin.initializeApp(functions.config().firebase);
 
-exports.onServiceCreated = onServiceCreate();
+exports.onSolicitationCreate = onSolicitationCreate();
 
-exports.onServiceUpdate = onServiceUpdate();
+exports.onSolicitationUpdate = onSolicitationUpdate();
 
 exports.onAvaliationCreated = onAvaliatedCreated();
 
