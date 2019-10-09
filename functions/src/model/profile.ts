@@ -52,14 +52,14 @@ export function profileParse(data: any): Profile {
         aboutMe: data.aboutMe,
         profilePhotoUrl: data.profilePhotoUrl,
         geoLocation: {
-            lat: 0,
-            lng: 0
+            lat: data.geoLocation.lat,
+            lng: data.geoLocation.lng
         },
         hideMyProfile: data.hideMyProfile,
         userRate: data.userRate,
         userMaxRate: data.userMaxRate,
         userMinRate: data.userMinRate,
-        solicitationCount: data.servicesCount,
+        solicitationCount: data.solicitationCount,
         avaliationsCount: data.avaliationsCount,
         deviceToken: data.deviceToken
     }

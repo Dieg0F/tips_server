@@ -33,17 +33,23 @@ export function onSolicitationUpdate() {
 
             if (data) {
                 const solicitation = solicitationParse(data);
-                var pfUidToNotify: string = "";
+                if (!solicitation.avaliatedTo.contractorAvaliation && !solicitation.avaliatedTo.hiredAvaliation) {
+                    var pfUidToNotify: string = "";
 
-                console.log("Solicitation Functions | Getting profile id to notify!");
-                if (solicitation.lastActionByUserUid == solicitation.contractorUid) {
-                    pfUidToNotify = solicitation.hiredUid;
+                    console.log("Solicitation Functions | Getting profile id to notify!");
+                    if (solicitation.lastActionByUserUid == solicitation.contractorUid) {
+                        pfUidToNotify = solicitation.hiredUid;
+                    } else {
+                        pfUidToNotify = solicitation.contractorUid;
+                    }
+
+                    console.log("Solicitation Functions | Requesting Profiles!");
+                    return requestProfilesForSolicitations(solicitation, pfUidToNotify, true);
                 } else {
-                    pfUidToNotify = solicitation.contractorUid;
+                    console.log("Solicitation Functions | Soliciation updated after avaliation!");
+                    console.log("Skiping...");
+                    return null;
                 }
-
-                console.log("Solicitation Functions | Requesting Profiles!");
-                return requestProfilesForSolicitations(solicitation, pfUidToNotify, true);
             } else {
                 console.log("Solicitation Functions | Solicitation was undefined!");
                 console.log("Skiping...");

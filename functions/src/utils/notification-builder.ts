@@ -23,20 +23,21 @@ export class NotificationBuilder {
     }
 
     static updateSolicitation(solicitation: Solicitation, pfLastAction: Profile): any {
-        console.log("NotificationBuilder | Creating notification for a service update.");
+        console.log("NotificationBuilder | Creating notification for a solicitation update.");
 
         var notificationTitle: string = "";
         var notificationBody: string = "";
         var userFullName = pfLastAction.name.firstName + " " + pfLastAction.name.lastName;
 
+        console.log("NotificationBuilder | Solicitation status: ", solicitation.status);
         switch (solicitation.status) {
-            case Constants.SOLICITATION_IS_OPEN:
+            case Constants.SOLICITATION_IS_RUNNING:
                 notificationTitle = "Serviço aprovado!";
                 notificationBody = userFullName + " aprovou a sua solicitação de serviço!";
                 break;
             case Constants.SOLICITATION_IS_FINISHED:
                 notificationTitle = "Serviço finalizado!";
-                notificationBody = userFullName + " finalizou do serviço!";
+                notificationBody = userFullName + " finalizou a solicitação de serviço!";
                 break;
             case Constants.SOLICITATION_IS_CANCELED:
                 notificationTitle = "Serviço cancelado!";
@@ -59,10 +60,10 @@ export class NotificationBuilder {
         return payload;
     }
 
-    static createAvaliation(avaliationUid: string, pfName: any) {
+    static createAvaliation(avaliationUid: string, profile: Profile) {
         console.log("NotificationBuilder | Creating notification for a new avaliation.")
 
-        var userFullName = pfName.name.firstName + " " + pfName.name.lastName;
+        var userFullName = profile.name.firstName + " " + profile.name.lastName;
 
         const payload = {
             data: {

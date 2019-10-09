@@ -5,14 +5,14 @@ import { NotificationSender } from "../utils/notification-sender";
 import { PROFILES } from "../utils/constants";
 
 
-export function notifyUser(solicitation: Solicitation, profiles: Profile[], isAUpdate: boolean = false) {
+export function notifyUserOnSolicitation(solicitation: Solicitation, profiles: Profile[], isAUpdate: boolean = false) {
     var payload: any;
 
     if (!isAUpdate) {
-        console.log("Solicitation Functions | Building Notification content!");
+        console.log("Solicitation Functions | Building Notification content for a new Solicitation!");
         payload = NotificationBuilder.createSolicitation(solicitation.solicitationId, profiles[PROFILES.PROFILE_TO_SHOW_ON_NOTIFICATION].name);
     } else {
-        console.log("Solicitation Functions | Building Notification content!");
+        console.log("Solicitation Functions | Building Notification content a Solicitation Updated!");
         payload = NotificationBuilder.updateSolicitation(solicitation, profiles[PROFILES.PROFILE_TO_SHOW_ON_NOTIFICATION]);
     }
 

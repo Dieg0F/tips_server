@@ -4,7 +4,7 @@ import { Constants } from "../utils/constants";
 import { profileParse, Profile } from '../model/profile';
 
 import { Solicitation } from '../model/solicitation';
-import { notifyUser } from "./notifications-functions";
+import { notifyUserOnSolicitation } from "./notifications-functions";
 
 async function getProfilesToBuildNotification(solicitation: Solicitation, pfUidToNotify: string) {
     console.log("Profile Functions | Requesting user's profile that make the last update on this service!");
@@ -19,8 +19,8 @@ async function getProfilesToBuildNotification(solicitation: Solicitation, pfUidT
     profiles.push(pfLastAction);
     profiles.push(pfToNotify);
 
-    console.log("Profile Functions | Profile Contractor: ", pfLastAction);
-    console.log("Profile Functions | Profile Hired: ", pfToNotify);
+    console.log("Profile Functions | Profile Last Action: ", pfLastAction);
+    console.log("Profile Functions | Profile To Notify: ", pfToNotify);
 
     return profiles;
 }
@@ -28,7 +28,7 @@ async function getProfilesToBuildNotification(solicitation: Solicitation, pfUidT
 export function requestProfilesForSolicitations(solicitation: Solicitation, pfUid: string, isAUpdate: boolean = false): any {
     return getProfilesToBuildNotification(solicitation, pfUid)
         .then((profiles: Array<Profile>) => {
-            return notifyUser(solicitation, profiles, isAUpdate);
+            return notifyUserOnSolicitation(solicitation, profiles, isAUpdate);
         })
         .catch(() => {
             console.log("Error on requesting Profiles!");

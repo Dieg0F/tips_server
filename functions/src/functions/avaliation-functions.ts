@@ -10,7 +10,7 @@ const avaliationUidParams = "{uId}";
 
 export function onAvaliatedCreated() {
     return functions.firestore.document(Constants.AVALIATIONS_COLLECTION + avaliationUidParams)
-        .onCreate((snap: any) => {
+        .onCreate(async (snap: any) => {
             console.log("Avaliation Functions | New avaliation created!");
             avaliationHandler(snap.data());
         });
@@ -18,7 +18,7 @@ export function onAvaliatedCreated() {
 
 export function onAvaliatedUpdated() {
     return functions.firestore.document(Constants.AVALIATIONS_COLLECTION + avaliationUidParams)
-        .onUpdate((snap: any) => {
+        .onUpdate(async (snap: any) => {
             console.log("Avaliation Functions | Avaliation Update!");
             avaliationHandler(snap.after.data());
         });
@@ -44,6 +44,7 @@ function avaliationHandler(data: any) {
                         var userMinRate = 0;
                         var userMaxRate = 0;
 
+                        console.log("Avaliation Functions | Building User new Rate.");
                         avaliationsSnap.forEach(async (el: any) => {
                             var aval = avaliationParse(el.data());
                             userTotalRate += aval.rate;
@@ -59,7 +60,8 @@ function avaliationHandler(data: any) {
                         console.log("Avaliation Functions | Requesting Rated Profile!");
                         return admin.firestore().doc(Constants.PROFILES_COLLECTION + avaliation.ratedUid).get()
                             .then(async (pfRatedSnap: any) => {
-                                const pfRated = profileParse(pfRatedSnap.data());
+                                var pfRated = profileParse(pfRatedSnap.data());
+                                console.log("Avaliation Functions | Profile to update: ", pfRated);
 
                                 console.log("Avaliation Functions | New Lowest rate!");
                                 pfRated.userMaxRate = userMaxRate;
@@ -67,17 +69,23 @@ function avaliationHandler(data: any) {
                                 console.log("Avaliation Functions | New Highest rate!");
                                 pfRated.userMinRate = userMinRate;
 
-                                console.log("Avaliation Functions | Updating ", pfRated.name.firstName, " avaliations count and user rate!");
+                                console.log("Avaliation Functions | Updating ", pfRated.name.firstName, "avaliations count and user rate!");
                                 pfRated.avaliationsCount = userAvaliationsCount;
                                 pfRated.userRate = userTotalRate / userAvaliationsCount;
 
                                 console.log("Avaliation Functions | Updating profile on Database!");
                                 return admin.firestore().doc(Constants.PROFILES_COLLECTION + pfRated.uid).update(pfRated)
                                     .then(() => {
-                                        const payload = NotificationBuilder.createAvaliation(avaliation.uId, pfEvaluator.name);
+                                        const payload = NotificationBuilder.createAvaliation(avaliation.uId, pfEvaluator);
 
                                         console.log("Avaliation Functions | Prepared to send a notification to Rated User!");
                                         return NotificationSender.sendNotification(pfRated.deviceToken, payload);
+                                    })
+                                    .catch((e) => {
+                                        console.log("Avaliation Functions | Error on update profile!");
+                                        console.log("Avaliation Functions | Error ", e);
+                                        console.log("Skiping...");
+                                        return null;
                                     })
                             });
                     });

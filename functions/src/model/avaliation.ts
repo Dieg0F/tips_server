@@ -3,10 +3,16 @@ export interface Avaliation {
     evaluatorUid: string;
     ratedUid: string;
     serviceUid: string;
+    name: string;
+    profileNames: {
+        evaluatorName: string;
+        ratedName: string;
+    }
     body: string;
     rate: number;
-    date: string;
+    date: number;
 }
+
 
 
 export function avaliationParse(data: any): Avaliation {
@@ -16,6 +22,11 @@ export function avaliationParse(data: any): Avaliation {
         evaluatorUid: data.evaluatorUid,
         ratedUid: data.ratedUid,
         serviceUid: data.serviceUid,
+        name: data.name,
+        profileNames: {
+            evaluatorName: data.profileNames.evaluatorName,
+            ratedName: data.profileNames.ratedName
+        },
         body: data.body,
         rate: data.rate,
         date: data.date
