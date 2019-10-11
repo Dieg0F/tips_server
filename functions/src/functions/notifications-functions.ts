@@ -9,13 +9,23 @@ export function notifyUserOnSolicitation(solicitation: Solicitation, profiles: P
     var payload: any;
 
     if (!isAUpdate) {
-        console.log("Solicitation Functions | Building Notification content for a new Solicitation!");
+        console.log("Notification Functions | Building Notification content for a new Solicitation!");
         payload = NotificationBuilder.createSolicitation(solicitation.solicitationId, profiles[PROFILES.PROFILE_TO_SHOW_ON_NOTIFICATION].name);
     } else {
-        console.log("Solicitation Functions | Building Notification content a Solicitation Updated!");
+        console.log("Notification Functions | Building Notification content a Solicitation Updated!");
         payload = NotificationBuilder.updateSolicitation(solicitation, profiles[PROFILES.PROFILE_TO_SHOW_ON_NOTIFICATION]);
     }
 
-    console.log("Solicitation Functions | Prepared to send a notification to User!");
+    console.log("Notification Functions | Prepared to send a notification to User!");
     return NotificationSender.sendNotification(profiles[PROFILES.PROFILE_TO_NOTIFY].deviceToken, payload);
 }
+
+export function notifyUserOnProfileUpdated(profile: Profile) {
+
+    console.log("Notification Functions | Building Notification content for a profile update!");
+    const payload = NotificationBuilder.updateProfile(profile);
+
+    console.log("Notification Functions | Prepared to send a notification to User!");
+    return NotificationSender.sendNotification(profile.deviceToken, payload);
+}
+

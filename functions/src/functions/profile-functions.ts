@@ -4,7 +4,7 @@ import { Constants } from "../utils/constants";
 import { profileParse, Profile } from '../model/profile';
 
 import { Solicitation } from '../model/solicitation';
-import { notifyUserOnSolicitation } from "./notifications-functions";
+import { notifyUserOnSolicitation, notifyUserOnProfileUpdated } from "./notifications-functions";
 
 async function getProfilesToBuildNotification(solicitation: Solicitation, pfUidToNotify: string) {
     console.log("Profile Functions | Requesting user's profile that make the last update on this service!");
@@ -52,8 +52,7 @@ export async function updateProfile(userMaxRate: number, userMinRate: number, us
     return await admin.firestore().doc(Constants.PROFILES_COLLECTION + pfRated.uid).update(pfRated)
         .then(() => {
             console.log("Profile Functions | Success on uodate profile!");
-            console.log("Skiping...");
-            return null;
+            return notifyUserOnProfileUpdated(pfRated);
         })
         .catch((e) => {
             console.log("Profile Functions | Error on update profile!");

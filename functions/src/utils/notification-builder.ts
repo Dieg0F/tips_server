@@ -5,6 +5,19 @@ import { Solicitation } from '../model/solicitation';
 
 export class NotificationBuilder {
 
+    static updateProfile(profile: Profile): any {
+        console.log("NotificationBuilder | Creating notification for a Profile Update.")
+        const payload = {
+            data: {
+                title: "update_profile",
+                body: profile.uid,
+            }
+        };
+
+        console.log("NotificationBuilder | Notification payload: ", payload);
+        return payload;
+    }
+
     static createSolicitation(solicitationUid: string, contractorName: any): any {
         console.log("NotificationBuilder | Creating notification for a new service.")
         const payload = {
