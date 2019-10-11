@@ -36,3 +36,29 @@ export function requestProfilesForSolicitations(solicitation: Solicitation, pfUi
             return null;
         });
 }
+
+export async function updateProfile(userMaxRate: number, userMinRate: number, userAvaliationsCount: number, userTotalRate: number, pfRated: Profile): Promise<any> {
+    console.log("Profile Functions | New Lowest rate!");
+    pfRated.userMaxRate = userMaxRate;
+
+    console.log("Profile Functions | New Highest rate!");
+    pfRated.userMinRate = userMinRate;
+
+    console.log("Profile Functions | Updating ", pfRated.name.firstName, "avaliations count and user rate!");
+    pfRated.avaliationsCount = userAvaliationsCount;
+    pfRated.userRate = userTotalRate / userAvaliationsCount;
+
+    console.log("Profile Functions | Updating profile on Database!");
+    return await admin.firestore().doc(Constants.PROFILES_COLLECTION + pfRated.uid).update(pfRated)
+        .then(() => {
+            console.log("Profile Functions | Success on uodate profile!");
+            console.log("Skiping...");
+            return null;
+        })
+        .catch((e) => {
+            console.log("Profile Functions | Error on update profile!");
+            console.log("Profile Functions | Error ", e);
+            console.log("Skiping...");
+            return null;
+        });
+}

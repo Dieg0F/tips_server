@@ -9,7 +9,7 @@ export class NotificationBuilder {
         console.log("NotificationBuilder | Creating notification for a new service.")
         const payload = {
             data: {
-                title: "new_service",
+                title: "new_solicitation",
                 body: solicitationUid,
             },
             notification: {
@@ -47,7 +47,7 @@ export class NotificationBuilder {
 
         const payload = {
             data: {
-                title: "service_update",
+                title: "update_solicitation",
                 body: solicitation.uId,
             },
             notification: {
