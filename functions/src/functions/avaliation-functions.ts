@@ -25,27 +25,17 @@ export function onAvaliatedUpdated() {
         });
 }
 
-export function onProfileRated() {
+export function onProfileRatedByNewAvaliation() {
+    return functions.firestore.document(Constants.AVALIATIONS_COLLECTION + avaliationUidParams)
+        .onCreate(async (snap: any) => {
+            return profileHandler(snap.data());
+        });
+}
+
+export function onProfileRatedByOldAvaliation() {
     return functions.firestore.document(Constants.AVALIATIONS_COLLECTION + avaliationUidParams)
         .onUpdate(async (snap: any) => {
-            console.log("Avaliation Functions | Avaliation Update!");
-            if (snap.after.data() !== undefined) {
-                console.log("Avaliation Functions | Requesting Evaluator Profile!");
-                const avaliation = avaliationParse(snap.after.data());
-
-                console.log("Avaliation Functions | Requesting Rated Profile!");
-                return admin.firestore().doc(Constants.PROFILES_COLLECTION + avaliation.ratedUid).get()
-                    .then(async (pfRatedSnap: any) => {
-                        var pfRated = profileParse(pfRatedSnap.data());
-                        console.log("Avaliation Functions | Profile to update: ", pfRated);
-
-                        return setProfileRate(avaliation, pfRated);
-                    });
-            } else {
-                console.log("Avaliation is undefined!");
-                console.log("Skiping...");
-                return null;
-            }
+            return profileHandler(snap.after.data());
         });
 }
 
@@ -55,22 +45,22 @@ export async function setProfileRate(avaliation: Avaliation, pfRated: Profile): 
         .then(async (avaliationsSnap: any) => {
             console.log("Avaliation Functions | All Avaliations from Rated User");
 
-            var userTotalRate = 0;
-            var userAvaliationsCount = 0;
-            var userMinRate = 0;
-            var userMaxRate = 0;
-            var rates: number[];
+            let userTotalRate = 0;
+            let userAvaliationsCount = 0;
+            let userMinRate = 0;
+            let userMaxRate = 0;
+            let rates: number[];
             rates = new Array<number>();
             console.log("Avaliation Functions | Building User new Rate.");
 
             avaliationsSnap.forEach(async (el: any) => {
-                var aval = avaliationParse(el.data());
+                let aval = avaliationParse(el.data());
                 rates.push(aval.rate);
                 userTotalRate += aval.rate;
             })
 
             userAvaliationsCount = rates.length;
-            userTotalRate = userTotalRate / userAvaliationsCount;
+            userTotalRate = (userTotalRate / userAvaliationsCount) + userAvaliationsCount;
             userMaxRate = Math.max(...rates);
             userMinRate = Math.min(...rates);
 
@@ -98,7 +88,7 @@ function avaliationHandler(data: any) {
                 console.log("Avaliation Functions | Requesting Rated Profile!");
                 return admin.firestore().doc(Constants.PROFILES_COLLECTION + avaliation.ratedUid).get()
                     .then(async (pfRatedSnap: any) => {
-                        var pfRated = profileParse(pfRatedSnap.data());
+                        let pfRated = profileParse(pfRatedSnap.data());
                         console.log("Avaliation Functions | Profile rated: ", pfRated);
 
                         const payload = NotificationBuilder.createAvaliation(avaliation.uId, pfEvaluator);
@@ -106,6 +96,27 @@ function avaliationHandler(data: any) {
                         console.log("Avaliation Functions | Prepared to send a notification to Rated User!");
                         return NotificationSender.sendNotification(pfRated.deviceToken, payload);
                     });
+            });
+    } else {
+        console.log("Avaliation is undefined!");
+        console.log("Skiping...");
+        return null;
+    }
+}
+
+function profileHandler(data: any) {
+    console.log("Avaliation Functions | Avaliation Update!");
+    if (data !== undefined) {
+        console.log("Avaliation Functions | Requesting Evaluator Profile!");
+        const avaliation = avaliationParse(data);
+
+        console.log("Avaliation Functions | Requesting Rated Profile!");
+        return admin.firestore().doc(Constants.PROFILES_COLLECTION + avaliation.ratedUid).get()
+            .then(async (pfRatedSnap: any) => {
+                let pfRated = profileParse(pfRatedSnap.data());
+                console.log("Avaliation Functions | Profile to update: ", pfRated);
+
+                return setProfileRate(avaliation, pfRated);
             });
     } else {
         console.log("Avaliation is undefined!");

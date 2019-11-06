@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { onAvaliatedUpdated, onAvaliatedCreated, onProfileRated } from './functions/avaliation-functions';
+import { onAvaliatedUpdated, onAvaliatedCreated, onProfileRatedByOldAvaliation, onProfileRatedByNewAvaliation } from './functions/avaliation-functions';
 import { onSolicitationUpdate, onSolicitationCreate } from './functions/solicitation-functions';
 
 admin.initializeApp(functions.config().firebase);
@@ -13,4 +13,6 @@ exports.onAvaliationCreated = onAvaliatedCreated();
 
 exports.onAvaliationUpdated = onAvaliatedUpdated();
 
-exports.onProfileRated = onProfileRated();
+exports.onProfileRatedByNewAvaliation = onProfileRatedByNewAvaliation();
+
+exports.onProfileRatedByOldAvaliation = onProfileRatedByOldAvaliation();

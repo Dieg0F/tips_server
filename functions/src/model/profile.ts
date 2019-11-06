@@ -23,21 +23,28 @@ export interface Profile {
     profilePhotoUrl: string;
     hideMyProfile: boolean;
     userRate: number;
+    userRateStars: number;
     userMinRate: number;
     userMaxRate: number;
     solicitationCount: number;
     avaliationsCount: number;
     deviceToken: string;
+    social: {
+        facebook: string;
+        showFacebook: boolean;
+        instagram: string;
+        showInstagram: boolean;
+        whatsapp: string;
+        showWhatsApp: boolean;
+        directCall: boolean;
+    };
 }
 
 export function profileParse(data: any): Profile {
     console.log("Profile | Parsing data to Profile.");
-    let profile: Profile = {
+    const profile: Profile = {
         uid: data.uid,
-        name: {
-            firstName: data.name.firstName,
-            lastName: data.name.lastName,
-        },
+        name: data.name,
         email: data.email,
         isAPro: data.isAPro,
         isActive: data.isActive,
@@ -51,17 +58,16 @@ export function profileParse(data: any): Profile {
         job: data.job,
         aboutMe: data.aboutMe,
         profilePhotoUrl: data.profilePhotoUrl,
-        geoLocation: {
-            lat: data.geoLocation.lat,
-            lng: data.geoLocation.lng
-        },
+        geoLocation: data.geoLocation,
         hideMyProfile: data.hideMyProfile,
         userRate: data.userRate,
+        userRateStars: data.userRateStars,
         userMaxRate: data.userMaxRate,
         userMinRate: data.userMinRate,
         solicitationCount: data.solicitationCount,
         avaliationsCount: data.avaliationsCount,
-        deviceToken: data.deviceToken
+        deviceToken: data.deviceToken,
+        social: data.social
     }
 
     console.log("Profile | Parsing data completed!");

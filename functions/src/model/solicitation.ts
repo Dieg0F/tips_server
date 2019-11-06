@@ -25,7 +25,7 @@ export interface Solicitation {
 
 export function solicitationParse(data: any): Solicitation {
     console.log("Solicitation | Parsing data to Solicitation.");
-    let solicitation: Solicitation = {
+    const solicitation: Solicitation = {
         uId: data.uId,
         solicitationId: data.solicitationId,
         contractorUid: data.contractorUid,

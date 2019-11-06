@@ -23,8 +23,6 @@ export function onSolicitationCreate() {
         });
 }
 
-
-
 export function onSolicitationUpdate() {
     return functions.firestore.document(Constants.SOLICITATION_COLLECTION + SOLICITATION_PARAMS_UID)
         .onUpdate(async (snap: any) => {
@@ -34,10 +32,10 @@ export function onSolicitationUpdate() {
             if (data) {
                 const solicitation = solicitationParse(data);
                 if (!solicitation.avaliatedTo.contractorAvaliation && !solicitation.avaliatedTo.hiredAvaliation) {
-                    var pfUidToNotify: string = "";
+                    let pfUidToNotify: string = "";
 
                     console.log("Solicitation Functions | Getting profile id to notify!");
-                    if (solicitation.lastActionByUserUid == solicitation.contractorUid) {
+                    if (solicitation.lastActionByUserUid === solicitation.contractorUid) {
                         pfUidToNotify = solicitation.hiredUid;
                     } else {
                         pfUidToNotify = solicitation.contractorUid;

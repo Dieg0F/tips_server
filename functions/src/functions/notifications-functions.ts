@@ -6,7 +6,7 @@ import { PROFILES } from "../utils/constants";
 
 
 export function notifyUserOnSolicitation(solicitation: Solicitation, profiles: Profile[], isAUpdate: boolean = false) {
-    var payload: any;
+    let payload: any;
 
     if (!isAUpdate) {
         console.log("Notification Functions | Building Notification content for a new Solicitation!");

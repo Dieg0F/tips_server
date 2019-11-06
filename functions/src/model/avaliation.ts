@@ -2,7 +2,7 @@ export interface Avaliation {
     uId: string;
     evaluatorUid: string;
     ratedUid: string;
-    serviceUid: string;
+    solicitationId: string;
     name: string;
     profileNames: {
         evaluatorName: string;
@@ -17,11 +17,11 @@ export interface Avaliation {
 
 export function avaliationParse(data: any): Avaliation {
     console.log("Avaliation | Parsing data to Avaliation.");
-    let avaliation: Avaliation = {
+    const avaliation: Avaliation = {
         uId: data.uId,
         evaluatorUid: data.evaluatorUid,
         ratedUid: data.ratedUid,
-        serviceUid: data.serviceUid,
+        solicitationId: data.solicitationId,
         name: data.name,
         profileNames: {
             evaluatorName: data.profileNames.evaluatorName,

@@ -15,7 +15,7 @@ async function getProfilesToBuildNotification(solicitation: Solicitation, pfUidT
     const pfToNotifySnap = await admin.firestore().doc(Constants.PROFILES_COLLECTION + pfUidToNotify).get();
     const pfToNotify = profileParse(pfToNotifySnap.data());
 
-    var profiles = new Array<Profile>();
+    let profiles = new Array<Profile>();
     profiles.push(pfLastAction);
     profiles.push(pfToNotify);
 
@@ -46,7 +46,8 @@ export async function updateProfile(userMaxRate: number, userMinRate: number, us
 
     console.log("Profile Functions | Updating ", pfRated.name.firstName, "avaliations count and user rate!");
     pfRated.avaliationsCount = userAvaliationsCount;
-    pfRated.userRate = userTotalRate / userAvaliationsCount;
+    pfRated.userRate = userTotalRate;
+    pfRated.userRateStars = userTotalRate - userAvaliationsCount;
 
     console.log("Profile Functions | Updating profile on Database!");
     return await admin.firestore().doc(Constants.PROFILES_COLLECTION + pfRated.uid).update(pfRated)

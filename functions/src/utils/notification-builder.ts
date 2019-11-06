@@ -38,9 +38,9 @@ export class NotificationBuilder {
     static updateSolicitation(solicitation: Solicitation, pfLastAction: Profile): any {
         console.log("NotificationBuilder | Creating notification for a solicitation update.");
 
-        var notificationTitle: string = "";
-        var notificationBody: string = "";
-        var userFullName = pfLastAction.name.firstName + " " + pfLastAction.name.lastName;
+        let notificationTitle: string = "";
+        let notificationBody: string = "";
+        let userFullName = pfLastAction.name.firstName + " " + pfLastAction.name.lastName;
 
         console.log("NotificationBuilder | Solicitation status: ", solicitation.status);
         switch (solicitation.status) {
@@ -76,7 +76,7 @@ export class NotificationBuilder {
     static createAvaliation(avaliationUid: string, profile: Profile) {
         console.log("NotificationBuilder | Creating notification for a new avaliation.")
 
-        var userFullName = profile.name.firstName + " " + profile.name.lastName;
+        let userFullName = profile.name.firstName + " " + profile.name.lastName;
 
         const payload = {
             data: {
