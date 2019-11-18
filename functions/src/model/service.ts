@@ -15,7 +15,7 @@ export interface Service {
 
 export function serviceParse(data: any): Service {
     console.log("Service | Parsing data to Service.");
-    let service: Service = {
+    const service: Service = {
         uId: data.uId,
         serviceId: data.serviceId,
         ownerUid: data.ownerUid,

@@ -1,20 +1,16 @@
 import { Profile } from '../model/profile';
-import { Service } from '../model/service';
 import { Constants } from './constants';
+import { Solicitation } from '../model/solicitation';
 
 
 export class NotificationBuilder {
 
-    static createService(serviceUid: string, contractorName: string): any {
-        console.log("NotificationBuilder | Creating notification for a new service.")
+    static updateProfile(profile: Profile): any {
+        console.log("NotificationBuilder | Creating notification for a Profile Update.")
         const payload = {
             data: {
-                title: "new_service",
-                body: serviceUid,
-            },
-            notification: {
-                title: "Solicitação de serviço",
-                body: contractorName + " te enviou uma solicitação de serviço!"
+                title: "update_profile",
+                body: profile.uid,
             }
         };
 
@@ -22,43 +18,74 @@ export class NotificationBuilder {
         return payload;
     }
 
-    static updateService(service: Service, pfLastAction: Profile, pfToNotify: Profile): any {
-        console.log("NotificationBuilder | Creating notification for a service update.");
+    static createSolicitation(solicitationUid: string, contractorName: any): any {
+        console.log("NotificationBuilder | Creating notification for a new service.")
+        const payload = {
+            data: {
+                title: "new_solicitation",
+                body: solicitationUid,
+            },
+            notification: {
+                title: "Solicitação de serviço",
+                body: contractorName.firstName + " " + contractorName.lastName + " te enviou uma solicitação de serviço!"
+            }
+        };
 
-        var notificationTitle: string = "";
-        var notificationBody: string = "";
+        console.log("NotificationBuilder | Notification payload: ", payload);
+        return payload;
+    }
 
-        switch (service.status) {
-            case Constants.SERVICE_IS_RUNNING:
+    static updateSolicitation(solicitation: Solicitation, pfLastAction: Profile): any {
+        console.log("NotificationBuilder | Creating notification for a solicitation update.");
+
+        let notificationTitle: string = "";
+        let notificationBody: string = "";
+        let userFullName = pfLastAction.name.firstName + " " + pfLastAction.name.lastName;
+
+        console.log("NotificationBuilder | Solicitation status: ", solicitation.status);
+        switch (solicitation.status) {
+            case Constants.SOLICITATION_IS_RUNNING:
                 notificationTitle = "Serviço aprovado!";
-                notificationBody = pfLastAction.nome + " aprovou a sua solicitação de serviço!";
+                notificationBody = userFullName + " aprovou a sua solicitação de serviço!";
                 break;
-            case Constants.SERVICE_IS_FINISHED:
+            case Constants.SOLICITATION_IS_FINISHED:
                 notificationTitle = "Serviço finalizado!";
-                notificationBody = pfLastAction.nome + " aceitou o termino do serviço!";
+                notificationBody = userFullName + " finalizou a solicitação de serviço!";
                 break;
-            case Constants.SERVICE_IS_CANCELED:
+            case Constants.SOLICITATION_IS_CANCELED:
                 notificationTitle = "Serviço cancelado!";
-                notificationBody = pfLastAction.nome + " aceitou o cancelamento do serviço!";
-                break;
-            case Constants.SERVICE_IS_AWAIT_TO_FINISH:
-                notificationTitle = "Finalização de serviço";
-                notificationBody = pfLastAction.nome + " finalizou o serviço! Acesse o serviço e finalize!";
-                break;
-            case Constants.SERVICE_IS_AWAIT_TO_CANCEL:
-                notificationTitle = "Cancelamento de serviço";
-                notificationBody = pfLastAction.nome + " cancelou o serviço! Acesse para saber mais!";
+                notificationBody = userFullName + " cancelou a solicitação de serviço!";
                 break;
         }
 
         const payload = {
             data: {
-                title: "service_update",
-                body: service.uId,
+                title: "update_solicitation",
+                body: solicitation.uId,
             },
             notification: {
                 title: notificationTitle,
                 body: notificationBody
+            }
+        };
+
+        console.log("NotificationBuilder | Notification payload: ", payload);
+        return payload;
+    }
+
+    static createAvaliation(avaliationUid: string, profile: Profile) {
+        console.log("NotificationBuilder | Creating notification for a new avaliation.")
+
+        let userFullName = profile.name.firstName + " " + profile.name.lastName;
+
+        const payload = {
+            data: {
+                title: "new_avaliaiton",
+                body: avaliationUid,
+            },
+            notification: {
+                title: "Avaliação recebida",
+                body: "Você recebeu uma avaliação de " + userFullName
             }
         };
 
